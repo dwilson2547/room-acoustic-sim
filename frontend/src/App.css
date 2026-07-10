@@ -248,6 +248,49 @@ body {
   color: #888;
 }
 
+.rt60-bands {
+  display: flex;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0.5rem;
+}
+
+.rt60-band {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #0f1830;
+  border-radius: 5px;
+  padding: 0.4rem 0.15rem;
+}
+
+.rt60-band-freq {
+  font-size: 0.7rem;
+  color: #a0a0a0;
+  margin-bottom: 0.2rem;
+}
+
+.rt60-band-val {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #4ecdc4;
+}
+
+.control-group select {
+  width: 100%;
+  padding: 0.4rem;
+  margin-top: 0.3rem;
+  background-color: #0f1830;
+  color: #e0e0e0;
+  border: 1px solid #2a3a5a;
+  border-radius: 5px;
+}
+
+.control-group input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .info-box {
   background-color: #16213e;
   border-radius: 8px;

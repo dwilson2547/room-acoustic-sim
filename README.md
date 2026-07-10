@@ -178,17 +178,29 @@ Generates SPL heatmap across the room.
 The simulation uses the **Image Source Method** for modeling room acoustics:
 
 1. **Direct Sound**: Calculated using inverse square law
-2. **Early Reflections**: First 15 orders of reflections from walls
-3. **Absorption**: Frequency-independent absorption coefficient
+2. **Early Reflections**: First 17 orders of reflections from walls
+3. **Absorption**: Either a uniform coefficient, or a frequency-dependent
+   material preset (octave-band absorption, 125 Hz – 8 kHz), plus air absorption
 4. **Speaker Model**: Omnidirectional point source (can be extended for directivity)
+
+Sampling rate is 44.1 kHz (single-position simulation), so the frequency
+response spans the full audible band. Derived metrics:
+
+- **RT60** via the Schroeder integral with an ISO-3382 T20 linear fit
+  (extrapolated to −60 dB), reported broadband **and per octave band**
+- **Direct/Reverberant ratio** with the direct window centred on the geometric
+  arrival time (distance ÷ speed of sound)
+- **Frequency response** power-smoothed to 1/6 octave on a log axis
 
 ### Limitations
 
 - Assumes rectangular room geometry
-- Frequency-independent absorption (real materials vary with frequency)
 - Does not model furniture or complex geometries
 - Omnidirectional speaker (no directivity pattern)
-- Best accuracy above 200 Hz
+- Image-source method under-resolves high-Q low-frequency room modes; accuracy
+  is best above ~200 Hz (a modal solver is the planned complement)
+- "Relative Level" is a direct-field level for comparing positions, not a
+  calibrated absolute SPL
 
 ## Future Enhancements
 

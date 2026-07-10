@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import RoomVisualization from './components/RoomVisualization';
 import FrequencyResponse from './components/FrequencyResponse';
 import EnergyDecay from './components/EnergyDecay';
@@ -12,6 +12,7 @@ function App() {
   const [speakerPosition, setSpeakerPosition] = useState([1, 1, 1.5]);
   const [listenerPosition, setListenerPosition] = useState([3, 2, 1.2]);
   const [absorption, setAbsorption] = useState(0.2);
+  const [material, setMaterial] = useState('uniform');
   const [simulationData, setSimulationData] = useState(null);
   const [heatmapData, setHeatmapData] = useState(null);
   const [isSimulating, setIsSimulating] = useState(false);
@@ -31,11 +32,12 @@ function App() {
           speakerPosition,
           listenerPosition,
           absorption,
+          material: material === 'uniform' ? null : material,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success) {
         setSimulationData(data);
       } else {
@@ -63,6 +65,7 @@ function App() {
           roomDimensions,
           speakerPosition,
           absorption,
+          material: material === 'uniform' ? null : material,
           height: listenerPosition[2],
           resolution: 15,
         }),
@@ -103,6 +106,8 @@ function App() {
             setListenerPosition={setListenerPosition}
             absorption={absorption}
             setAbsorption={setAbsorption}
+            material={material}
+            setMaterial={setMaterial}
             onSimulate={runSimulation}
             onGenerateHeatmap={generateHeatmap}
             isSimulating={isSimulating}

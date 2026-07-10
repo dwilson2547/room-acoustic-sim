@@ -9,12 +9,26 @@ const Controls = ({
   setListenerPosition,
   absorption,
   setAbsorption,
+  material,
+  setMaterial,
   onSimulate,
   onGenerateHeatmap,
   isSimulating,
   showHeatmap,
   setShowHeatmap,
 }) => {
+  // Keys match MATERIAL_PRESETS in the backend; 'uniform' falls back to the slider.
+  const MATERIALS = [
+    ['uniform', 'Uniform (use slider)'],
+    ['brick_painted', 'Painted brick'],
+    ['concrete_block', 'Concrete block'],
+    ['gypsum_drywall', 'Gypsum drywall'],
+    ['wood_panel', 'Wood paneling'],
+    ['glass_window', 'Glass window'],
+    ['carpet_on_foam', 'Carpet on foam'],
+    ['heavy_curtain', 'Heavy curtain'],
+    ['acoustic_panel', 'Acoustic panel'],
+  ];
   const handleDimensionChange = (index, value) => {
     const newDims = [...roomDimensions];
     newDims[index] = parseFloat(value) || 0;
@@ -158,6 +172,22 @@ const Controls = ({
         <h3>Room Acoustics</h3>
         <div className="control-group">
           <label>
+            Surface Material:
+            <select
+              value={material}
+              onChange={(e) => setMaterial(e.target.value)}
+            >
+              {MATERIALS.map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
+            </select>
+          </label>
+          <p className="hint">
+            Presets use frequency-dependent absorption (per octave band), so
+            highs and lows decay differently — as real surfaces behave.
+          </p>
+
+          <label>
             Absorption Coefficient:
             <input
               type="range"
@@ -165,15 +195,15 @@ const Controls = ({
               max="1"
               step="0.05"
               value={absorption}
+              disabled={material !== 'uniform'}
               onChange={(e) => setAbsorption(parseFloat(e.target.value))}
             />
             <span className="value-display">{absorption.toFixed(2)}</span>
           </label>
           <p className="hint">
-            0 = Highly reflective (tile, concrete)<br />
-            0.2 = Moderately reflective (living room)<br />
-            0.5 = Absorptive (carpeted, furnished)<br />
-            1.0 = Anechoic (no reflections)
+            {material !== 'uniform'
+              ? 'Ignored while a material preset is selected.'
+              : '0 = reflective (tile) · 0.2 = living room · 0.5 = furnished · 1.0 = anechoic'}
           </p>
         </div>
       </div>

@@ -39,12 +39,36 @@ const Metrics = ({ metrics }) => {
       </div>
 
       <div className="metric-card">
-        <div className="metric-label">Peak SPL</div>
+        <div className="metric-label">Relative Level</div>
         <div className="metric-value">{formatValue(metrics.peakSPL, 1, ' dB')}</div>
         <div className="metric-description">
-          Sound pressure level at listener position
+          Direct-field level for comparing positions (not a calibrated SPL)
         </div>
       </div>
+
+      {metrics.rt60Bands && metrics.rt60Bands.centers.length > 0 && (
+        <div className="metric-card">
+          <div className="metric-label">RT60 by Octave Band</div>
+          <div className="rt60-bands">
+            {metrics.rt60Bands.centers.map((fc, i) => {
+              const val = metrics.rt60Bands.values[i];
+              const label = fc >= 1000 ? `${fc / 1000}k` : `${fc}`;
+              return (
+                <div key={fc} className="rt60-band">
+                  <span className="rt60-band-freq">{label}</span>
+                  <span className="rt60-band-val">
+                    {val == null ? '—' : `${val.toFixed(2)}s`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="metric-description">
+            Reverberation time per frequency (Hz). Uneven decay is normal — bass
+            usually lingers longest.
+          </div>
+        </div>
+      )}
 
       <div className="metric-card room-quality" style={{ borderColor: roomQuality.color }}>
         <div className="metric-label">Room Character</div>
