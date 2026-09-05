@@ -67,7 +67,7 @@ function App() {
           absorption,
           material: material === 'uniform' ? null : material,
           height: listenerPosition[2],
-          resolution: 15,
+          resolution: 40,
         }),
       });
       

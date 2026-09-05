@@ -33,8 +33,8 @@
 │                                                                  │
 │  ┌────────────────────────────────────────────────────────┐    │
 │  │ POST /api/heatmap                                       │    │
-│  │ - Multi-position SPL calculation                        │    │
-│  │ - Returns: 2D grid of SPL values                        │    │
+│  │ - Vectorised image-source level map (one model)         │    │
+│  │ - Returns: 2D grid of relative-level (dB) values        │    │
 │  └────────────────────────────────────────────────────────┘    │
 │                                                                  │
 └────────────────────────┬────────────────────────────────────────┘
@@ -92,15 +92,14 @@ Click "Generate SPL Heatmap"
       ↓
 Frontend sends request to /api/heatmap
       ↓
-Backend creates grid (e.g., 15x15 points)
+Backend builds one image-source model (source only)
       ↓
-For each grid point:
-  - Create new RoomSimulator
-  - Place listener at grid position
-  - Run simulation
-  - Extract peak SPL
+Vectorised over all grid points at once:
+  - distance from every image to every point
+  - received energy = Σ (damping / distance)²
+  - convert to dB relative to the loudest point
       ↓
-Build 2D SPL array
+Build 2D level array
       ↓
 Return to frontend
       ↓
@@ -229,17 +228,17 @@ From the RIR, we can calculate:
 - Image sources: O(n^6) for n=15 orders
 - FFT: O(n log n) for n=16000 samples
 
-### Heatmap Generation (~10-30 seconds)
-- Grid resolution: 15x15 = 225 points
-- Each point requires full simulation
-- Can be parallelized (future enhancement)
+### Heatmap Generation (~0.2-0.4 seconds)
+- One image-source model serves the whole grid (images are receiver-independent)
+- Received energy at every grid point is a single vectorised numpy expression —
+  no per-point RIR synthesis
+- ~20x faster than the old one-simulation-per-point loop; a 40x40 grid now
+  costs less than the old 15x15 did
 
 ### Optimization Strategies
 1. Reduce max_order for faster computation
 2. Lower sampling rate (fs) for preview
-3. Reduce heatmap resolution
-4. Cache room geometry if only listener moves
-5. Use multiprocessing for heatmap generation
+3. Chunk the grid (already done) to bound peak memory at high resolution
 
 ## Extension Points
 

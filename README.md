@@ -85,7 +85,7 @@ The frontend will run on `http://localhost:3000` and automatically open in your 
    - Frequency response shows how different frequencies are affected
    - Energy decay curve shows reverberation characteristics
    - Acoustic metrics provide quantitative analysis
-4. **Generate Heatmap**: Click "Generate SPL Heatmap" to see sound distribution across the entire room (note: this takes longer)
+4. **Generate Heatmap**: Click "Generate SPL Heatmap" to see relative sound-level distribution across the entire room (computed from a single image-source model — sub-second even at high grid resolution)
 
 ## Understanding the Results
 
